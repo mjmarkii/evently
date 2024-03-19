@@ -10,6 +10,8 @@ import * as z from 'zod';
 import { eventDefaultValues } from "@/constants";
 import Dropdown from "./Dropdown";
 import { Textarea } from "../ui/textarea";
+import { FileUploader } from "./FileUploader";
+import { useState } from "react";
  
 // define the type of props this component will receive
 type EventFormProps = {
@@ -19,6 +21,8 @@ type EventFormProps = {
 
 // component proper
 const EventForm = ({ userId, type}: EventFormProps) => {
+  const [files, setFiles] = useState<File[]>([]);
+
   // 1. Define the form
   const initialValues = eventDefaultValues;
 
@@ -81,7 +85,11 @@ const EventForm = ({ userId, type}: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl className="h-72">
-                  {/* Create File Uploader */}
+                  <FileUploader 
+                    onFieldChange={field.onChange}
+                    imageUrl={field.value}
+                    setFiles={setFiles}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
