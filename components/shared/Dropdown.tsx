@@ -5,8 +5,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Category, { ICategory } from "@/lib/database/models/category.model";
-import { useState } from "react";
+import { ICategory } from "@/lib/database/models/category.model";
+import { startTransition, useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+
 
 type DropdownProps = {
   value?: string;
@@ -14,10 +27,12 @@ type DropdownProps = {
 };
 
 const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
-  const [categories, setCategories] = useState<ICategory[]>([
-    { _id: '1', name: 'Category 1'},
-    { _id: '2', name: 'Category 2'},
-  ]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [newCategory, setNewCategory] = useState("");
+
+  const handleAddCategory = () => {
+
+  }
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -30,6 +45,24 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
             {category.name}
           </SelectItem>
         ))}
+
+        <Dialog>
+          <DialogTrigger className="p-medium-14 flex w-full rounded-sm py-3 pl-8 text-primary-500 hover:bg-primary-50 focus:text-primary-500">Open</DialogTrigger>
+          <DialogContent className="bg-white">
+            <DialogHeader>
+              <DialogTitle>New Category</DialogTitle>
+              <DialogDescription>
+                <Input type="text" placeholder="Category name" className="input-field mt-3" onChange={(e) => setNewCategory(e.target.value)} />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button>Cancel</Button>
+              </DialogClose>
+              <Button onClick={() => startTransition(handleAddCategory)}>Add</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </SelectContent>
     </Select>
   );

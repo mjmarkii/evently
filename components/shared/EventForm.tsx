@@ -9,6 +9,7 @@ import { eventFormSchema } from "@/lib/validator";
 import * as z from 'zod';
 import { eventDefaultValues } from "@/constants";
 import Dropdown from "./Dropdown";
+import { Textarea } from "../ui/textarea";
  
 // define the type of props this component will receive
 type EventFormProps = {
@@ -54,6 +55,33 @@ const EventForm = ({ userId, type}: EventFormProps) => {
               <FormItem className="w-full">
                 <FormControl>
                   <Dropdown onChangeHandler={field.onChange} value={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex flex-col gap-5 md:flex-row">
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl className="h-72">
+                  <Textarea placeholder="Description" {...field} className="textarea rounded-2xl" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl className="h-72">
+                  {/* Create File Uploader */}
                 </FormControl>
                 <FormMessage />
               </FormItem>
