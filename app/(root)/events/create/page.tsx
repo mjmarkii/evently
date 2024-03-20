@@ -6,6 +6,9 @@ const CreateEvent = () => {
   // get session data from clerk
   const { sessionClaims } = auth();
 
+  // customize the session token to retrieve data at any point
+  // go to Clerk > Sessions > Customize session token 
+  // in this case it's on public metadata > userId (user id from MongoDB)
   const userId = sessionClaims?.userId as string;
 
   return (
