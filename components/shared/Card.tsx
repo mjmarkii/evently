@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { DeleteConfirmation } from "./DeleteConfirmation";
 
 type CardProps = {
   event: IEvent;
@@ -30,6 +31,9 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
             <Link href={`/events/${event._id}/update`}>
               <Image src="/assets/icons/edit.svg" alt="Edit" width={20} height={20} />
             </Link>
+
+            {/* Delete button */}
+            <DeleteConfirmation eventId={event._id} />
           </div>
         )}
 
