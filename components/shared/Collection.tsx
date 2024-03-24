@@ -37,7 +37,7 @@ const Collection = ({
                   <Card event={event} hasOrderLink={hasOrderLink} hidePrice={hidePrice} />
                 </li>
               );
-            }}
+            })}
           </ul>
         </div>
       ) : (
