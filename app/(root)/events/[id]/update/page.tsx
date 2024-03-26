@@ -1,11 +1,24 @@
 import EventForm from '@/components/shared/EventForm'
+import { getEventById } from '@/lib/actions/event.action'
 import { auth } from '@clerk/nextjs'
 import React from 'react'
 
-const UpdateEvent = () => {
+type UpdateEventProps = {
+  params: {
+    id: string
+  }
+}
+
+const UpdateEvent = async ({ params: { id }}: UpdateEventProps) => {
+  // get event details
+  const event = await getEventById(id);
+
   // get session data from clerk
   const { sessionClaims } = auth();
 
+  // customize the session token to retrieve data at any point
+  // go to Clerk > Sessions > Customize session token 
+  // in this case it's on public metadata > userId (user id from MongoDB)
   const userId = sessionClaims?.userId as string;
 
   return (
@@ -15,7 +28,12 @@ const UpdateEvent = () => {
       </section>
 
       <div className="wrapper my-8">
-        <EventForm userId={userId} type="Update" />
+        <EventForm 
+          userId={userId} 
+          type="Update" 
+          event={event} 
+          eventId={event._id} 
+        />
       </div>
     </>
   )

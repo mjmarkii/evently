@@ -25,24 +25,31 @@ import DatePicker from "react-datepicker";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useUploadThing } from '@/lib/uploadthing';
 import { useRouter } from "next/navigation";
-import { createEvent } from "@/lib/actions/event.action";
+import { createEvent, updateEvent } from "@/lib/actions/event.action";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { IEvent } from "@/lib/database/models/event.model";
 
 // define the type of props this component will receive
 type EventFormProps = {
   userId: string;
   type: "Create" | "Update";
+  event?: IEvent;
+  eventId?: string;
 };
 
 // component proper
-const EventForm = ({ userId, type }: EventFormProps) => {
+const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing('imageUploader');
   const router = useRouter();
 
-  // 1. Define the form
-  const initialValues = eventDefaultValues;
+  // 1. Define the form but check if the event is already defined (for Update)
+  const initialValues = event && type === "Update" ? {
+    ...event,
+    startDateTime: new Date(event?.startDateTime),
+    endDateTime: new Date(event?.endDateTime),
+  } : eventDefaultValues;
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
@@ -81,7 +88,29 @@ const EventForm = ({ userId, type }: EventFormProps) => {
       } catch (error) {
         console.log(error);
       }
-    }
+    } 
+
+    if (type === 'Update') {
+      if (!eventId) {
+        router.back();
+        return;
+      }
+
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`
+        });
+
+        if (updatedEvent) {
+          form.reset();
+          router.push(`/events/${updatedEvent._id}`);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } 
   }
 
   return (
